@@ -1,8 +1,6 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-* {
-  padding: 0;
-  margin: 0;
-} */
+.slick-slide {
+  margin-right: 2px;
+}
+.slick-list {
+  height: 420px !important;
+}

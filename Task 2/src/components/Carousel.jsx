@@ -1,70 +1,61 @@
 import React, { useState } from "react";
-import Card from "./Card";
-import { initalState } from "./data";
+import Slider from "react-slick";
+import Carousel1 from "../assets/carousel1.png";
+import Carousel2 from "../assets/carousel2.png";
+import Carousel3 from "../assets/carousel3.png";
+import Carousel4 from "../assets/carousel4.png";
+import Carousel5 from "../assets/carousel5.png";
+import Carousel6 from "../assets/carousel6.png";
+import { useRef } from "react";
+
+const images = [
+  Carousel1,
+  Carousel2,
+  Carousel3,
+  Carousel4,
+  Carousel5,
+  Carousel6,
+];
 
 function Carousel() {
-  const [cards, setCards] = useState(initalState);
+  const slider = useRef(null);
 
-  const handleLeftClick = () => {
-    const prevState = [...cards];
-    const nextCardIdx = prevState
-      .filter((ft) => ft.active === true)
-      .sort((a, b) => (a.pos > b.pos ? 1 : b.pos > a.pos ? -1 : 0))[0].idx;
-    prevState.find((f) => f.active === false).active = true;
-    prevState.find((f) => f.idx === nextCardIdx).active = false;
-    prevState.find((f) => f.idx === nextCardIdx).pos =
-      Math.max.apply(
-        null,
-        prevState.map(function (o) {
-          return o.pos;
-        })
-      ) + 1;
-    setCards(prevState);
+  function handlePrevious() {
+    slider.current.slickPrev();
+  }
+
+  function handleNext() {
+    slider.current.slickNext();
+  }
+
+  const settings = {
+    className: "center",
+    infinite: true,
+    slidesToShow: 6,
+    swipeToSlide: false,
   };
-
-  const handleRightClick = () => {
-    const prevState = [...cards];
-    const nextCardIdx = prevState
-      .filter((ft) => ft.active === true)
-      .sort((a, b) => (a.pos > b.pos ? 1 : b.pos > a.pos ? -1 : 0))
-      .pop(1).idx;
-
-    prevState.find((f) => f.active === false).pos =
-      Math.min.apply(
-        null,
-        prevState.map(function (o) {
-          return o.pos;
-        })
-      ) - 1;
-
-    prevState.find((f) => f.active === false).active = true;
-
-    prevState.find((f) => f.idx === nextCardIdx).active = false;
-
-    setCards(prevState);
-  };
-
   return (
-    <>
-      <div
-        className="text-xl md:text-5xl cursor-pointer"
-        onClick={() => handleLeftClick()}
+    <div className="slider-container relative">
+      <Slider {...settings} ref={slider}>
+        {images.map((img, index) => (
+          <div class={"" + (index % 2 == 0 ? "pt-5" : "")}>
+            <img src={img} alt="" />
+          </div>
+        ))}
+      </Slider>
+      <button
+        onClick={handlePrevious}
+        className="w-12 h-12 text-lg bg-white rounded-full shadow-[rgba(21,25,28,0.25)_0px_16px_16px] absolute left-[-0.8em] top-[50%] translate-y-[-50%] font-bold"
       >
         {"<"}
-      </div>
-      {cards
-        .filter((f) => f.active === true)
-        .sort((a, b) => (a.pos > b.pos ? 1 : b.pos > a.pos ? -1 : 0))
-        .map((card, index) => (
-          <Card key={index} prop={card.text} />
-        ))}
-      <div
-        className="text-xl md:text-5xl cursor-pointer"
-        onClick={() => handleRightClick()}
+      </button>
+      <button
+        onClick={handleNext}
+        className="w-12 h-12 text-lg bg-white rounded-full shadow-[rgba(21,25,28,0.25)_0px_16px_16px] absolute right-[-1.3em] top-[50%] translate-y-[-50%] font-bold"
       >
         {">"}
-      </div>
-    </>
+      </button>
+    </div>
   );
 }
 
